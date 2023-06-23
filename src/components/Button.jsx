@@ -1,31 +1,66 @@
 import React from "react";
-import { styled } from "styled-components";
+import { css, styled } from "styled-components";
+
+// [과제] font awesome이나 https://react-icons.github.io/react-icons/ 에서 rightIcon 넣어보기
+const ButtonContainer = ({ children, ...rest }) => {
+  return (
+    <>
+      <StButton {...rest}>
+        {children} {rest.rightIcon}
+      </StButton>
+    </>
+  );
+};
 
 function Button() {
   return (
     <StContainer>
       <StH1>Button</StH1>
+
       <StButtonRow>
-        <StButton1
+        <ButtonContainer
           onClick={() => {
             alert("hello");
           }}
+          backgroundColor="#4fc0e8"
+          size="large"
+          outlined={true}
+          rightIcon=">"
         >
           Large Primary Button
-        </StButton1>
-        <StButton2>Medium</StButton2>
-        <StButton3>Small</StButton3>
+        </ButtonContainer>
+        <ButtonContainer
+          backgroundColor="#4fc0e8"
+          color="#ffffff"
+          size="medium"
+        >
+          Medium
+        </ButtonContainer>
+        <ButtonContainer backgroundColor="#4fc0e8" color="#ffffff" size="small">
+          Small
+        </ButtonContainer>
       </StButtonRow>
       <StButtonRow>
-        <StButton4
+        <ButtonContainer
           onClick={() => {
             prompt("어려워여");
           }}
+          backgroundColor="#e84f82"
+          size="large"
+          outlined={true}
         >
           Large Primary Button
-        </StButton4>
-        <StButton5>Medium</StButton5>
-        <StButton6>Small</StButton6>
+        </ButtonContainer>
+        <ButtonContainer
+          backgroundColor="#e84f82"
+          color="#ffffff"
+          size="medium"
+        >
+          Medium
+        </ButtonContainer>
+        <ButtonContainer backgroundColor="#e84f82" color="#ffffff" size="small">
+          Small
+        </ButtonContainer>
       </StButtonRow>
     </StContainer>
   );
@@ -49,68 +84,44 @@ const StButtonRow = styled.div`
   gap: 10px;
 `;
 
-const StButton1 = styled.button`
-  height: 50px;
-  width: 200px;
-  background-color: transparent;
-  border: 3px solid #4fc0e8;
-  border-radius: 10px;
-  font-weight: 700;
-  // color: white;
-  cursor: pointer;
-`;
-
-const StButton2 = styled.button`
-  height: 50px;
-  width: 150px;
-  background-color: #4fc0e8;
+const StButton = styled.button`
+  background-color: ${({ backgroundColor }) => backgroundColor};
   border: none;
   border-radius: 10px;
   font-weight: 700;
-  color: white;
+  color: ${({ color }) => color};
   cursor: pointer;
-`;
 
-const StButton3 = styled.button`
-  height: 45px;
-  width: 120px;
-  background-color: #4fc0e8;
-  border: none;
-  border-radius: 10px;
-  font-weight: 700;
-  color: white;
-  cursor: pointer;
-`;
+  ${({ size }) => {
+    switch (size) {
+      case "large":
+        return css`
+          height: 50px;
+          width: 200px;
+        `;
+      case "medium":
+        return css`
+          height: 45px;
+          width: 150px;
+        `;
+      case "small":
+        return css`
+          height: 40px;
+          width: 120px;
+        `;
 
-const StButton4 = styled.button`
-  height: 50px;
-  width: 200px;
-  background-color: transparent;
-  border: 3px solid #e84f82;
-  border-radius: 10px;
-  font-weight: 700;
-  // color: white;
-  cursor: pointer;
-`;
+      default:
+        break;
+    }
+  }}
 
-const StButton5 = styled.button`
-  height: 50px;
-  width: 150px;
-  background-color: #e84f82;
-  border: none;
-  border-radius: 10px;
-  font-weight: 700;
-  color: white;
-  cursor: pointer;
-`;
-
-const StButton6 = styled.button`
-  height: 45px;
-  width: 120px;
-  background-color: #e84f82;
-  border: none;
-  border-radius: 10px;
-  font-weight: 700;
-  color: white;
-  cursor: pointer;
+  // 어이가 없네! 이게 border랑 background-color보다 위에 있으면 적용 안됨.
+${({ outlined, backgroundColor }) => {
+    if (outlined) {
+      return css`
+        border: 3px solid ${backgroundColor};
+        background-color: #fff;
+      `;
+    }
+  }}
 `;
