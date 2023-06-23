@@ -1,27 +1,44 @@
+import { useState } from "react";
 import { styled } from "styled-components";
 
-function Select() {
-  const options = [
-    { value: "react", name: "리액트" },
-    { value: "java", name: "자바" },
-    { value: "spring", name: "스프링" },
-  ];
+const optionData = [
+  {
+    key: "react",
+    value: "리액트",
+  },
+  {
+    key: "java",
+    value: "자바",
+  },
+  {
+    key: "spring",
+    value: "스프링",
+  },
+];
 
-  const handleChange = (event) => {
-    console.log(event.target.value);
+function Select() {
+  const [openOptions, setOpenOptions] = useState(false);
+  const [currentValue, setCurrentValue] = useState("리액트");
+
+  const changeValue = (event) => {
+    setCurrentValue(event.target.getAttribute("value"));
   };
 
   return (
     <StContainer>
       <StH1>Select</StH1>
 
-      <StSelect onChange={handleChange} defaultValue="apple">
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.name}
-          </option>
-        ))}
-      </StSelect>
+      <StSelectBox onClick={() => setOpenOptions((prev) => !prev)}>
+        <StLabel>{currentValue}</StLabel>
+
+        <StOptions show={openOptions}>
+          {optionData.map(({ key, value }) => (
+            <StOption key={key} value={value} onClick={changeValue}>
+              {value}
+            </StOption>
+          ))}
+        </StOptions>
+      </StSelectBox>
     </StContainer>
   );
 }
@@ -40,16 +57,57 @@ const StH1 = styled.h1`
   font-weight: 700;
 `;
 
-const StSelect = styled.select`
+const StSelectBox = styled.div`
+  position: relative;
   width: 30%;
+  margin-bottom: 100px;
   padding: 8px;
-  font-size: 14px;
-
   border: 2px solid #4fc0e8;
   border-radius: 5px;
-  background-color: transparent;
-  &:focus {
-    border-color: #1976e0;
+
+  /* 이거 나중에 react-icon으로 바꾸자 -> youtube 보고.. */
+  &::before {
+    content: "⌵";
+    position: absolute;
+    top: 2px;
+    right: 15px;
+    color: #4fc0e8;
+    font-size: 20px;
+    font-weight: 900;
+    cursor: pointer;
   }
-  appearance: none;
+`;
+
+const StLabel = styled.label`
+  font-size: 15px;
+  padding-left: 15px;
+`;
+
+const StOptions = styled.ul`
+  position: absolute;
+  top: 30px;
+  left: 0px;
+
+  width: 100%;
+
+  max-height: ${(props) => (props.show ? "none" : "0")};
+
+  padding: 0;
+
+  border: ${(props) => (props.show ? "2px solid #4fc0e8" : "none")};
+  border-radius: 5px;
+
+  overflow: hidden;
+`;
+
+const StOption = styled.li`
+  list-style: none;
+  font-size: 16px;
+  padding: 6px 20px;
+  &:hover {
+    margin: 3px;
+    background-color: #4fc0e8;
+    border-radius: 5px;
+    transition: background-color 0.2s ease-in;
+  }
 `;
