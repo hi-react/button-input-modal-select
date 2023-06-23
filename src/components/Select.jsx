@@ -1,43 +1,33 @@
 import { useState } from "react";
 import { styled } from "styled-components";
 
-const optionData = [
-  {
-    key: "react",
-    value: "리액트",
-  },
-  {
-    key: "java",
-    value: "자바",
-  },
-  {
-    key: "spring",
-    value: "스프링",
-  },
-];
+const optionData = ["리액트", "자바", "스프링", "자바스크립트", "노드"];
 
 function Select() {
-  const [openOptions, setOpenOptions] = useState(false);
-  const [currentValue, setCurrentValue] = useState("리액트");
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedOption, setSelectedOption] = useState(null);
 
-  const changeValue = (event) => {
-    setCurrentValue(event.target.getAttribute("value"));
+  const changeValue = (option) => {
+    setSelectedOption(option);
   };
 
   return (
     <StContainer>
       <StH1>Select</StH1>
 
-      <StSelectBox onClick={() => setOpenOptions((prev) => !prev)}>
-        <StLabel>{currentValue}</StLabel>
-
-        <StOptions show={openOptions}>
-          {optionData.map(({ key, value }) => (
-            <StOption key={key} value={value} onClick={changeValue}>
-              {value}
-            </StOption>
-          ))}
-        </StOptions>
+      {/* 박스 전체에서 클릭이 발생하면 -> 옵션이 open/close 되는 상탯값을 변경 ! */}
+      <StSelectBox onClick={() => setIsOpen((prev) => !prev)}>
+        <StLabel>{selectedOption || "--- 선택하세요 ---"}</StLabel>
+        {/* isOpen인 경우에만 다음의 html 요소들이 만들어 지게! (height=0 같은걸로 제어하지 말고^^) */}
+        {isOpen && (
+          <StOptions>
+            {optionData.map((option) => (
+              <StOption key={option} onClick={() => changeValue(option)}>
+                {option}
+              </StOption>
+            ))}
+          </StOptions>
+        )}
       </StSelectBox>
     </StContainer>
   );
@@ -60,7 +50,6 @@ const StH1 = styled.h1`
 const StSelectBox = styled.div`
   position: relative;
   width: 30%;
-  margin-bottom: 100px;
   padding: 8px;
   border: 2px solid #4fc0e8;
   border-radius: 5px;
@@ -71,9 +60,11 @@ const StSelectBox = styled.div`
     position: absolute;
     top: 2px;
     right: 15px;
+
     color: #4fc0e8;
     font-size: 20px;
     font-weight: 900;
+
     cursor: pointer;
   }
 `;
@@ -89,15 +80,27 @@ const StOptions = styled.ul`
   left: 0px;
 
   width: 100%;
-
-  max-height: ${(props) => (props.show ? "none" : "0")};
+  max-height: 110px;
 
   padding: 0;
 
-  border: ${(props) => (props.show ? "2px solid #4fc0e8" : "none")};
+  border: 2px solid #4fc0e8;
   border-radius: 5px;
 
-  overflow: hidden;
+  overflow: scroll;
+
+  // 스크롤바 CSS
+  &::-webkit-scrollbar {
+    /* display: none; */
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #4fc0e8;
+    border-radius: 3px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: #1976e0;
+  }
 `;
 
 const StOption = styled.li`
@@ -108,6 +111,8 @@ const StOption = styled.li`
     margin: 3px;
     background-color: #4fc0e8;
     border-radius: 5px;
-    transition: background-color 0.2s ease-in;
+    color: white;
+    cursor: pointer;
+    transition: 0.2s ease-in;
   }
 `;
