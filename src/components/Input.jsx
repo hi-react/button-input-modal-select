@@ -14,7 +14,9 @@ function Input() {
       setPrice("");
       return;
     }
-    alert(`name: ${name}, price: ${price}원 입니다`);
+    // alert 띄울 때는 또 콤마(,)를 없애라신다..
+    const noCommaPrice = price.replaceAll(",", "");
+    alert(`이름: ${name}, 가격: ${noCommaPrice}원 입니다`);
     setName("");
     setPrice("");
   };
