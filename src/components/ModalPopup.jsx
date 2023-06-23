@@ -1,8 +1,8 @@
 import React from "react";
-import "../style/modal.css";
 import { styled } from "styled-components";
 
-function ModalPopup({ modal, closeModal, outsideClose }) {
+function ModalPopup({ isOpen, closeModal, outsideClose }) {
+  // outsideClose 상태가 true인 첫 번째 modal만 background를 선택했을 때도 modal이 닫힘
   const backgroundClickHandler = () => {
     if (outsideClose) {
       closeModal();
@@ -11,12 +11,13 @@ function ModalPopup({ modal, closeModal, outsideClose }) {
 
   return (
     <>
-      {modal && (
+      {isOpen && (
         <StDiv onClick={backgroundClickHandler}>
           <StSection>
             <StHeader>Modal 세상에 온 걸 환영해..</StHeader>
             <StMain>팝업창입니다!</StMain>
             <StFooter>
+              {/* outsideClose 상태가 false인 두 번째 modal만 확인 버튼 하나더 추가! */}
               {outsideClose === false && (
                 <StButton
                   onClick={() => {
@@ -48,6 +49,17 @@ const StDiv = styled.div`
   align-items: center;
 
   background-color: rgba(0, 0, 0, 0.5);
+
+  // fadeIn 애니메이션
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  animation: fadeIn 600ms forwards;
 `;
 
 const StSection = styled.section`

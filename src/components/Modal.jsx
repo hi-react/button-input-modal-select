@@ -1,20 +1,20 @@
 import React, { useState } from "react";
 import { styled } from "styled-components";
 import ModalPopup from "./ModalPopup";
+// import { createPortal } from "react-dom";
 
 function Modal() {
   // useState로 modal open 상태 변경 -> true = open
-  const [modal, setModal] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [outsideClose, setOutsideClose] = useState(true);
 
   const openModal = (shouldOutsideClose) => {
-    setModal(true);
+    setIsOpen(true);
     setOutsideClose(shouldOutsideClose);
   };
 
   const closeModal = () => {
-    setModal(false);
-    setOutsideClose(true);
+    setIsOpen(false);
   };
 
   return (
@@ -24,14 +24,14 @@ function Modal() {
       <StModalButton>
         <StButton1 onClick={() => openModal(true)}>open modal</StButton1>
         <ModalPopup
-          modal={modal}
+          isOpen={isOpen}
           closeModal={closeModal}
           outsideClose={outsideClose}
         ></ModalPopup>
 
         <StButton2 onClick={() => openModal(false)}>open modal</StButton2>
         <ModalPopup
-          modal={modal}
+          isOpen={isOpen}
           closeModal={closeModal}
           outsideClose={outsideClose}
         ></ModalPopup>
