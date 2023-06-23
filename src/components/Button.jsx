@@ -1,12 +1,12 @@
 import React from "react";
 import { css, styled } from "styled-components";
 
-// [과제] font awesome이나 https://react-icons.github.io/react-icons/ 에서 rightIcon 넣어보기
+// [과제] font awesome이나 https://react-icons.github.io/react-icons/ 에서 Icon 넣어보기
 const ButtonContainer = ({ children, ...rest }) => {
   return (
     <>
       <StButton {...rest}>
-        {children} {rest.rightIcon}
+        {children} {rest.icon}
       </StButton>
     </>
   );
@@ -22,21 +22,17 @@ function Button() {
           onClick={() => {
             alert("hello");
           }}
-          backgroundColor="#4fc0e8"
+          bc="#4fc0e8"
           size="large"
-          outlined={true}
-          rightIcon=">"
+          outlined="true"
+          icon=">"
         >
           Large Primary Button
         </ButtonContainer>
-        <ButtonContainer
-          backgroundColor="#4fc0e8"
-          color="#ffffff"
-          size="medium"
-        >
+        <ButtonContainer bc="#4fc0e8" color="#ffffff" size="medium">
           Medium
         </ButtonContainer>
-        <ButtonContainer backgroundColor="#4fc0e8" color="#ffffff" size="small">
+        <ButtonContainer bc="#4fc0e8" color="#ffffff" size="small">
           Small
         </ButtonContainer>
       </StButtonRow>
@@ -45,20 +41,16 @@ function Button() {
           onClick={() => {
             prompt("어려워여");
           }}
-          backgroundColor="#e84f82"
+          bc="#e84f82"
           size="large"
-          outlined={true}
+          outlined="true"
         >
           Large Primary Button
         </ButtonContainer>
-        <ButtonContainer
-          backgroundColor="#e84f82"
-          color="#ffffff"
-          size="medium"
-        >
+        <ButtonContainer bc="#e84f82" color="#ffffff" size="medium">
           Medium
         </ButtonContainer>
-        <ButtonContainer backgroundColor="#e84f82" color="#ffffff" size="small">
+        <ButtonContainer bc="#e84f82" color="#ffffff" size="small">
           Small
         </ButtonContainer>
       </StButtonRow>
@@ -85,7 +77,7 @@ const StButtonRow = styled.div`
 `;
 
 const StButton = styled.button`
-  background-color: ${({ backgroundColor }) => backgroundColor};
+  background-color: ${({ bc }) => bc};
   border: none;
   border-radius: 10px;
   font-weight: 700;
@@ -116,10 +108,10 @@ const StButton = styled.button`
   }}
 
   // 어이가 없네! 이게 border랑 background-color보다 위에 있으면 적용 안됨.
-${({ outlined, backgroundColor }) => {
+${({ outlined, bc }) => {
     if (outlined) {
       return css`
-        border: 3px solid ${backgroundColor};
+        border: 3px solid ${bc};
         background-color: #fff;
       `;
     }
