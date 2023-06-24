@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { styled } from "styled-components";
 
 const optionData = ["리액트", "자바", "스프링", "자바스크립트", "노드"];
@@ -7,22 +7,46 @@ function Select() {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
 
-  const changeValue = (option) => {
-    setSelectedOption(option);
-  };
+  const targetRef = useRef(null);
+
+  // [추가 기능] Select 박스 영역 외곽을 누르면 항목이 닫히도록!
+  useEffect(() => {
+    const clickOutsideHandler = (event) => {
+      if (!targetRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+    window.addEventListener("mousedown", clickOutsideHandler);
+    return () => {
+      window.removeEventListener("mousedown", clickOutsideHandler);
+    };
+  }, []);
+
+  // [추가 기능] esc 버튼 눌러도 항목이 닫히도록 !
+  useEffect(() => {
+    const escCloseHandler = (event) => {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+      }
+    };
+    window.addEventListener("keydown", escCloseHandler);
+    return () => {
+      window.removeEventListener("keydown", escCloseHandler);
+    };
+  }, []);
 
   return (
     <StContainer>
       <StH1>Select</StH1>
 
       {/* 박스 전체에서 클릭이 발생하면 -> 옵션이 open/close 되는 상탯값을 변경 ! */}
-      <StSelectBox onClick={() => setIsOpen((prev) => !prev)}>
+      <StSelectBox ref={targetRef} onClick={() => setIsOpen((prev) => !prev)}>
         <StLabel>{selectedOption || "--- 선택하세요 ---"}</StLabel>
         {/* isOpen인 경우에만 다음의 html 요소들이 만들어 지게! (height=0 같은걸로 제어하지 말고^^) */}
         {isOpen && (
           <StOptions>
             {optionData.map((option) => (
-              <StOption key={option} onClick={() => changeValue(option)}>
+              <StOption key={option} onClick={() => setSelectedOption(option)}>
                 {option}
               </StOption>
             ))}
