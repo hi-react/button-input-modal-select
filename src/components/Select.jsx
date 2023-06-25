@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { styled } from "styled-components";
+import { styled, css } from "styled-components";
 
 const optionData = ["리액트", "자바", "스프링", "자바스크립트", "노드"];
 
@@ -12,9 +12,7 @@ function Select() {
   // [추가 기능] Select 박스 영역 외곽을 누르면 항목이 닫히도록!
   useEffect(() => {
     const clickOutsideHandler = (event) => {
-      if (!targetRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
+      if (!targetRef.current.contains(event.target)) setIsOpen(false);
     };
     window.addEventListener("mousedown", clickOutsideHandler);
     return () => {
@@ -25,15 +23,50 @@ function Select() {
   // [추가 기능] esc 버튼 눌러도 항목이 닫히도록 !
   useEffect(() => {
     const escCloseHandler = (event) => {
-      if (event.key === "Escape") {
-        setIsOpen(false);
-      }
+      if (event.key === "Escape") setIsOpen(false);
     };
     window.addEventListener("keydown", escCloseHandler);
     return () => {
       window.removeEventListener("keydown", escCloseHandler);
     };
   }, []);
+
+  // [추가 기능] 방향키로 옵션 항목을 선택할 수 있게 해보자
+  useEffect(() => {
+    const keyUpDownHandler = (event) => {
+      // 아래 방향키
+      if (event.key === "ArrowDown") {
+        event.preventDefault();
+        setIsOpen(true);
+        const currentIndex = selectedOption
+          ? optionData.findIndex((option) => option === selectedOption)
+          : -1;
+        const nextIndex = (currentIndex + 1) % optionData.length;
+        console.log(currentIndex, nextIndex);
+        setSelectedOption(optionData[nextIndex]);
+        const optionElement = document.getElementById(`option-${nextIndex}`);
+        optionElement.scrollIntoView({ block: "nearest" });
+        // 위 방향키
+      } else if (event.key === "ArrowUp") {
+        event.preventDefault();
+        setIsOpen(true);
+        const currentIndex = selectedOption
+          ? optionData.findIndex((option) => option === selectedOption)
+          : -1;
+        const previousIndex =
+          (currentIndex - 1 + optionData.length) % optionData.length;
+        setSelectedOption(optionData[previousIndex]);
+        const optionElement = document.getElementById(
+          `option-${previousIndex}`
+        );
+        optionElement.scrollIntoView({ block: "nearest" });
+      }
+    };
+    window.addEventListener("keydown", keyUpDownHandler);
+    return () => {
+      window.removeEventListener("keydown", keyUpDownHandler);
+    };
+  }, [selectedOption]);
 
   return (
     <StContainer>
@@ -45,8 +78,14 @@ function Select() {
         {/* isOpen인 경우에만 다음의 html 요소들이 만들어 지게! (height=0 같은걸로 제어하지 말고^^) */}
         {isOpen && (
           <StOptions>
-            {optionData.map((option) => (
-              <StOption key={option} onClick={() => setSelectedOption(option)}>
+            {optionData.map((option, index) => (
+              <StOption
+                // [추가 기능] 방향키로 선택 항목 제어: boolean(true/false 반환)
+                id={`option-${index}`}
+                selected={selectedOption === option}
+                key={option}
+                onClick={() => setSelectedOption(option)}
+              >
                 {option}
               </StOption>
             ))}
@@ -139,4 +178,18 @@ const StOption = styled.li`
     cursor: pointer;
     transition: 0.2s ease-in;
   }
+  /* 방향키로 옵션 선택 항목 제어 */
+  ${({ selected }) => {
+    return (
+      selected &&
+      css`
+        margin: 3px;
+        background-color: #4fc0e8;
+        border-radius: 5px;
+        color: white;
+        cursor: pointer;
+        transition: 0.3s ease-in;
+      `
+    );
+  }}
 `;
